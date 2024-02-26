@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Uncut: Get Real! Stay Anonymous!"
-};
+}; 
 
 export default function RootLayout({
   children,
