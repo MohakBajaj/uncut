@@ -4,17 +4,40 @@ import { TypewriterEffect } from "./ui/typewriter-effect";
 import { Quicksand } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
+import { Icons } from "@/components/Icons";
+import useIsMobile from "@/lib/hooks/isMobile";
 
 const qs = Quicksand({
-  subsets: ["latin", "latin-ext"],
+  subsets: ["latin"],
 });
 
 export default function Header() {
+  const isMobile = useIsMobile();
   return (
     <LampContainer>
+      <motion.div
+        initial={{
+          opacity: 0,
+          y: isMobile ? -140 : -100,
+          scale: isMobile ? 1.2 : 1.5,
+        }}
+        animate={{
+          opacity: 1,
+          y: isMobile ? -140 : -100,
+          scale: isMobile ? 1.2 : 1.5,
+        }}
+        transition={{
+          delay: 0.3,
+          duration: 0.8,
+          ease: "easeInOut",
+        }}
+        className="absolute"
+      >
+        <Icons.logo className="stroke-white/[0.15] fill-none select-none" />
+      </motion.div>
       <motion.h1
-        initial={{ opacity: 0.5, y: 100 }}
-        animate={{ opacity: 1, y: -50 }}
+        initial={{ opacity: 0, y: 100 }}
+        animate={{ opacity: 1, y: isMobile ? -35 : 0 }}
         transition={{
           delay: 0.3,
           duration: 0.8,
@@ -34,8 +57,8 @@ export default function Header() {
         </span>
       </motion.h1>
       <motion.div
-        initial={{ opacity: 0.5, y: 100 }}
-        animate={{ opacity: 1, y: -50 }}
+        initial={{ opacity: 0, y: 100 }}
+        animate={{ opacity: 1, y: isMobile ? -35 : 0 }}
         transition={{
           delay: 0.4,
           duration: 0.8,
@@ -65,8 +88,8 @@ export default function Header() {
         ></TypewriterEffect>
       </motion.div>
       <motion.div
-        initial={{ opacity: 0.5, y: 100 }}
-        animate={{ opacity: 1, y: -50 }}
+        initial={{ opacity: 0, y: 100 }}
+        animate={{ opacity: 1, y: isMobile ? -35 : 0 }}
         transition={{
           delay: 0.5,
           duration: 0.8,

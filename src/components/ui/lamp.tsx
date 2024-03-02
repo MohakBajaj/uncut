@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { Icons } from "../Icons";
+import useIsMobile from "@/lib/hooks/isMobile";
 
 export const LampContainer = ({
   children,
@@ -11,22 +11,7 @@ export const LampContainer = ({
   children: React.ReactNode;
   className?: string;
 }) => {
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 640);
-    };
-
-    handleResize();
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
+  const isMobile = useIsMobile();
   return (
     <div
       className={cn(
@@ -97,18 +82,6 @@ export const LampContainer = ({
       <div className="relative z-50 flex sm:-translate-y-60 -translate-y-48 flex-col items-center px-5">
         {children}
       </div>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{
-          delay: 0.3,
-          duration: 0.8,
-          ease: "easeInOut",
-        }}
-        className="absolute md:top-[21vh] scale-110 top-[25vh] md:scale-[140%]"
-      >
-        <Icons.logo className="stroke-white/[0.15] fill-none select-none" />
-      </motion.div>
     </div>
   );
 };
