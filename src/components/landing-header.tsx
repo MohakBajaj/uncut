@@ -33,7 +33,7 @@ export default function Header() {
         }}
         className="absolute"
       >
-        <Icons.logo className="stroke-white/[0.15] fill-none select-none" />
+        <Icons.logo className="stroke-white/[0.2] fill-none select-none" />
       </motion.div>
       <motion.h1
         initial={{ opacity: 0, y: 100 }}
