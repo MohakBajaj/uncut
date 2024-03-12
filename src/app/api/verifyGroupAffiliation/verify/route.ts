@@ -17,3 +17,5 @@ export async function POST(req: Request) {
 
   return NextResponse.json({ success: true, message: "Code Verified" });
 }
+
+export const dynamic = "force-dynamic";
