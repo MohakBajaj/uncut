@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
 import { Icons } from "@/components/Icons";
 import useIsMobile from "@/lib/hooks/isMobile";
+import Link from "next/link";
 
 const qs = Quicksand({
   subsets: ["latin"],
@@ -97,9 +98,11 @@ export default function Header() {
         }}
         className="flex justify-center select-none"
       >
-        <Button variant={"secondary"} className="w-48 mt-8">
-          Get Started
-        </Button>
+        <Link href={"/login"}>
+          <Button variant={"secondary"} className="w-48 mt-8">
+            Get Started
+          </Button>
+        </Link>
       </motion.div>
     </LampContainer>
   );
