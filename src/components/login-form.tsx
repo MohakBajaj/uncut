@@ -84,7 +84,11 @@ export default function LoginForm() {
         transition={{ delay: 0.3, duration: 0.5, ease: "easeInOut" }}
         className=" flex-grow flex flex-col justify-center items-center h-full"
       >
-        <span className="text-3xl font-bold text-primary mb-4">Login</span>
+        <span
+          className={cn("text-4xl font-bold text-primary mb-4", sm.className)}
+        >
+          Login
+        </span>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
