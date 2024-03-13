@@ -1,3 +1,4 @@
+"use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -122,7 +123,19 @@ export default function LoginForm() {
                 </FormItem>
               )}
             />
-            <Button type="submit">Submit</Button>
+            <div className="flex justify-between">
+              <Button type="submit">Login</Button>
+              <FormItem>
+                <FormLabel>New here?</FormLabel>
+                <FormControl>
+                  <Link href="/register">
+                    <Button variant={"link"} className="text-primary px-1">
+                      Sign up
+                    </Button>
+                  </Link>
+                </FormControl>
+              </FormItem>
+            </div>
           </form>
         </Form>
       </motion.div>
