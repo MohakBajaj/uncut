@@ -29,7 +29,7 @@ const sm = Syne_Mono({
 
 const FormSchema = z.object({
   email: z.string().email({
-    message: "Username must be at least 2 characters.",
+    message: "Enter a valid email address.",
   }),
   password: z
     .string()
@@ -101,7 +101,10 @@ export default function LoginForm() {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="5000xxxxx@stu.upes.ac.in" {...field} />
+                    <Input
+                      placeholder="Ex. 5000xxxxx@stu.upes.ac.in"
+                      {...field}
+                    />
                   </FormControl>
                   <FormDescription>
                     The e-mail you use at the time of registration.
