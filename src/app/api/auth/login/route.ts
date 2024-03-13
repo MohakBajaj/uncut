@@ -24,7 +24,27 @@ export async function POST(req: Request) {
   });
 
   const data = await response.json();
-  return NextResponse.json(data);
+
+  if (!data.success) {
+    return NextResponse.json(data, { status: 401 });
+  }
+
+  const res = NextResponse.json({
+    success: data.success,
+    message: data.message,
+    user: data.user,
+  });
+
+  res.cookies.set("token", data.tokens.token, {
+    httpOnly: true,
+    maxAge: 15 * 24 * 60 * 60,
+  });
+  res.cookies.set("refreshToken", data.tokens.refreshToken, {
+    httpOnly: true,
+    maxAge: 30 * 24 * 60 * 60,
+  });
+
+  return res;
 }
 
 export const dynamic = "force-dynamic";

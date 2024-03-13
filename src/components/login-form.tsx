@@ -21,6 +21,8 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { Icons } from "./Icons";
 import { Syne_Mono } from "next/font/google";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const sm = Syne_Mono({
   subsets: ["latin"],
@@ -51,16 +53,46 @@ export default function LoginForm() {
       password: "",
     },
   });
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    setLoading(true);
+    const response = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    }).then((res) => res.json());
+
+    if (!response.success) {
+      toast({
+        title: "Incorrect Email or Password.",
+        variant: "destructive",
+      });
+      setLoading(false);
+      return;
+    }
+
     toast({
-      title: "You submitted the following values:",
+      title: "Login Success 🎉",
       description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
+        <div>
+          <p>
+            Welcome back,{" "}
+            <span className="text-primary font-bold">
+              {response.user.username}
+            </span>
+            !
+          </p>
+          <p>Redirecting to App...</p>
+        </div>
       ),
     });
+    setTimeout(() => {
+      router.push("/app");
+    }, 500);
   }
 
   return (
@@ -131,7 +163,9 @@ export default function LoginForm() {
               )}
             />
             <div className="flex justify-between">
-              <Button type="submit">Login</Button>
+              <Button type="submit" disabled={loading}>
+                Login
+              </Button>
               <FormItem>
                 <FormLabel>New here?</FormLabel>
                 <FormControl>
