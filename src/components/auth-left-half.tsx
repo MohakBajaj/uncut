@@ -55,8 +55,8 @@ export default function AuthLeftHalf() {
               },
             ]}
             className="font-bold text-center"
-            textClassName="text-7xl"
-            cursorClassName="h-20"
+            textClassName="text-[calc(4vw)]"
+            cursorClassName="h-[calc(5vw)]"
           />
         </motion.div>
         <motion.div
