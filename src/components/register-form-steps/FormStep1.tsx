@@ -16,6 +16,8 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "../ui/use-toast";
 import Link from "next/link";
 import { FormSchema } from "../register-form";
+import { useEffect, useState } from "react";
+import { validateEmail } from "@/lib/utils";
 
 const FormSchemaStep1 = z.object({
   email: z.string().email({
@@ -25,6 +27,10 @@ const FormSchemaStep1 = z.object({
 export function FormStep1({ setStep }: { setStep: (step: number) => void }) {
   const { toast } = useToast();
 
+  const [validateGroupAffiliation, setValidateGroupAffiliation] =
+    useState(false);
+  const [groupAffiliationStatus, setGroupAffiliationStatus] = useState("");
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchemaStep1),
     defaultValues: {
@@ -32,17 +38,33 @@ export function FormStep1({ setStep }: { setStep: (step: number) => void }) {
     },
   });
 
+  const email = form.watch("email");
+
+  useEffect(() => {
+    if (email && validateEmail(email)) {
+      setGroupAffiliationStatus("Validating...");
+      fetch(`/api/validateGroupAffiliation?email=${email}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success) {
+            setValidateGroupAffiliation(true);
+            setGroupAffiliationStatus("Valid.");
+          }
+        });
+    }
+  }, [email]);
+
   function onSubmit(data: z.infer<typeof FormSchemaStep1>) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
-    setStep(2);
+    if (validateGroupAffiliation) {
+      toast({
+        title: "Verification Code Sent!",
+        description:
+          "We have sent a verification code to your email. Please enter the code to continue.",
+      });
+      setStep(2);
+    }
   }
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
@@ -56,7 +78,9 @@ export function FormStep1({ setStep }: { setStep: (step: number) => void }) {
                 <Input placeholder="Ex. 5000xxxxx@stu.upes.ac.in" {...field} />
               </FormControl>
               <FormDescription>
-                Enter your College Email Address
+                {!groupAffiliationStatus
+                  ? "Enter your College Email Address"
+                  : groupAffiliationStatus}
               </FormDescription>
               <FormMessage />
             </FormItem>

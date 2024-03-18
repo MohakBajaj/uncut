@@ -7,10 +7,11 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { Icons } from "./Icons";
 import { Syne_Mono } from "next/font/google";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormStep1 } from "./register-form-steps/FormStep1";
 import { FormStep2 } from "./register-form-steps/FormStep2";
 import { FormStep3 } from "./register-form-steps/FormStep3";
+import { useRouter } from "next/navigation";
 
 const sm = Syne_Mono({
   subsets: ["latin"],
@@ -34,6 +35,18 @@ export const FormSchema = z.object({
 export default function LoginForm() {
   const isMobile = useIsMobile();
   const [step, setStep] = useState(1);
+
+  const router = useRouter();
+
+  // useEffect(() => {
+  //   fetch("/api/auth/checkSession")
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       if (data.success) {
+  //         router.push("/app");
+  //       }
+  //     });
+  // }, [router]);
 
   return (
     <div className="h-full flex flex-col col-span-3">
