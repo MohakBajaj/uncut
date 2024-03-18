@@ -3,27 +3,35 @@ import type { NextRequest } from "next/server";
 
 const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:3000";
 
-export default async function middleware(req: NextRequest) {
-  if (!req.cookies.has("token") || !req.cookies.get("refreshToken")) {
-    return NextResponse.redirect(new URL("/login", BACKEND_URL));
-  }
-
-  const token = req.cookies.get("token")?.value || "";
-  const refreshToken = req.cookies.get("refreshToken")?.value || "";
-
-  const response = await fetch(`${BACKEND_URL}/auth/verifyToken`, {
+async function verifyToken(token: string) {
+  const response = await fetch(`${BACKEND_URL}/api/auth/verifyToken`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
       authorization: token,
-      "x-refresh-token": refreshToken,
     },
   }).then((res) => res.json());
-  if (response.success) {
-    return NextResponse.next();
+
+  return response.success;
+}
+
+function checkToken(req: NextRequest) {
+  return !req.cookies.has("token") || !req.cookies.has("refreshToken");
+}
+
+export default async function middleware(req: NextRequest) {
+  if (!checkToken(req)) {
+    return NextResponse.redirect(new URL("/login", BACKEND_URL));
+  }
+
+  const token = req.cookies.get("token")?.value || "";
+  const user = await verifyToken(token);
+
+  if ((user && req.url.includes("/login")) || req.url.includes("/register")) {
+    return NextResponse.redirect(new URL("/app", BACKEND_URL));
   }
 }
 
 export const config = {
-  matcher: ["/api/:path*", "/app/:path*"],
+  matcher: ["/app/:path*"],
 };

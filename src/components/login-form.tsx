@@ -22,7 +22,7 @@ import Link from "next/link";
 import { Icons } from "./Icons";
 import { Syne_Mono } from "next/font/google";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const sm = Syne_Mono({
   subsets: ["latin"],
@@ -54,6 +54,17 @@ export default function LoginForm() {
     },
   });
   const router = useRouter();
+
+  useEffect(() => {
+    fetch("/api/auth/checkSession")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          router.push("/app");
+        }
+      });
+  }, [router]);
+
   const [loading, setLoading] = useState(false);
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
