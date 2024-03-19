@@ -38,15 +38,15 @@ export default function LoginForm() {
 
   const router = useRouter();
 
-  // useEffect(() => {
-  //   fetch("/api/auth/checkSession")
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       if (data.success) {
-  //         router.push("/app");
-  //       }
-  //     });
-  // }, [router]);
+  useEffect(() => {
+    fetch("/api/auth/checkSession")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          router.push("/app");
+        }
+      });
+  }, [router]);
 
   return (
     <div className="h-full flex flex-col col-span-3">
