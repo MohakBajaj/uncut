@@ -1,3 +1,4 @@
+"use client";
 import { motion } from "framer-motion";
 import { LampContainer } from "./ui/lamp";
 import { TypewriterEffect } from "./ui/typewriter-effect";
