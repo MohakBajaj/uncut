@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "../ui/use-toast";
+import { useRouter } from "next/navigation";
 
 const FormSchemaStep3 = z.object({
   username: z
@@ -35,6 +36,7 @@ const FormSchemaStep3 = z.object({
 });
 export function FormStep3() {
   const { toast } = useToast();
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof FormSchemaStep3>>({
     resolver: zodResolver(FormSchemaStep3),
@@ -44,15 +46,25 @@ export function FormStep3() {
     },
   });
 
-  function onSubmit(data: z.infer<typeof FormSchemaStep3>) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+  async function onSubmit(data: z.infer<typeof FormSchemaStep3>) {
+    await fetch("/api/auth/register", {
+      method: "POST",
+      body: JSON.stringify({
+        email: localStorage.getItem("email") as string,
+        username: data.username,
+        password: data.password,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          toast({
+            title: "Success!",
+            description: "Your account has been created. Redirecting...",
+          });
+          router.push("/app");
+        }
+      });
   }
   return (
     <Form {...form}>

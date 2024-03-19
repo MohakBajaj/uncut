@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "../ui/use-toast";
-import Link from "next/link";
 
 const FormSchemaStep2 = z.object({
   verificationCode: z.string().length(12, {
@@ -31,16 +30,25 @@ export function FormStep2({ setStep }: { setStep: (step: number) => void }) {
     },
   });
 
-  function onSubmit(data: z.infer<typeof FormSchemaStep2>) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
-    setStep(3);
+  async function onSubmit(data: z.infer<typeof FormSchemaStep2>) {
+    await fetch("/api/verifyGroupAffiliation/verify", {
+      method: "POST",
+      body: JSON.stringify({
+        email: localStorage.getItem("email") as string,
+        code: data.verificationCode,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          toast({
+            title: "Thank you!",
+            description:
+              "Your email has been verified. You can now proceed to the next step.",
+          });
+          setStep(3);
+        }
+      });
   }
   return (
     <Form {...form}>
@@ -65,17 +73,7 @@ export function FormStep2({ setStep }: { setStep: (step: number) => void }) {
             </FormItem>
           )}
         />
-        <div className="flex justify-between">
-          <FormItem>
-            <FormLabel>Already Awesome?</FormLabel>
-            <FormControl>
-              <Link href="/login">
-                <Button variant={"link"} className="text-primary px-1">
-                  Login
-                </Button>
-              </Link>
-            </FormControl>
-          </FormItem>
+        <div className="flex justify-end">
           <Button type="submit">Next</Button>
         </div>
       </form>

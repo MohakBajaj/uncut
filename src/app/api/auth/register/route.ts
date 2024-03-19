@@ -26,7 +26,22 @@ export async function POST(req: Request) {
   });
 
   const data = await response.json();
-  return NextResponse.json(data);
+  const res = NextResponse.json(data);
+  if (data.success) {
+    const token = data.tokens.token;
+    const refreshToken = data.tokens.refreshToken;
+    res.cookies.set("token", token, {
+      httpOnly: true,
+      maxAge: 60 * 60 * 24 * 15,
+      path: "/",
+    });
+    res.cookies.set("refreshToken", refreshToken, {
+      httpOnly: true,
+      maxAge: 60 * 60 * 24 * 15,
+      path: "/",
+    });
+  }
+  return res;
 }
 
 export const dynamic = "force-dynamic";

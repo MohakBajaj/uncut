@@ -54,14 +54,23 @@ export function FormStep1({ setStep }: { setStep: (step: number) => void }) {
     }
   }, [email]);
 
-  function onSubmit(data: z.infer<typeof FormSchemaStep1>) {
+  async function onSubmit(data: z.infer<typeof FormSchemaStep1>) {
     if (validateGroupAffiliation) {
-      toast({
-        title: "Verification Code Sent!",
-        description:
-          "We have sent a verification code to your email. Please enter the code to continue.",
+      localStorage.setItem("email", data.email);
+      await fetch("/api/verifyGroupAffiliation/send", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: data.email }),
+      }).then(() => {
+        toast({
+          title: "Verification Code Sent!",
+          description:
+            "We have sent a verification code to your email. Please enter the code to continue.",
+        });
+        setStep(2);
       });
-      setStep(2);
     }
   }
 

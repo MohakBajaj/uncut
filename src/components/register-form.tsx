@@ -1,7 +1,7 @@
 "use client";
 import { z } from "zod";
 
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import useIsMobile from "@/lib/hooks/isMobile";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
