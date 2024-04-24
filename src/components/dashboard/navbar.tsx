@@ -19,7 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useRouter } from "next/navigation";
-import { LogOut } from "lucide-react";
+import { LogOut, Monitor, MoonStar, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 
 const sm = Syne_Mono({
@@ -29,12 +29,26 @@ const sm = Syne_Mono({
 
 export default function Navbar() {
   const user =
-    typeof window !== "undefined" && localStorage.getItem("session")
-      ? JSON.parse(localStorage.getItem("session")!).res.tokenData.payload
-          .username
+    typeof window !== "undefined" && localStorage.getItem("user")
+      ? JSON.parse(localStorage.getItem("user")!)
       : "";
   const router = useRouter();
   const { setTheme } = useTheme();
+  const currentTheme =
+    typeof window !== "undefined" && localStorage.getItem("theme")!;
+
+  const logout = () => {
+    fetch("/api/auth/logout")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          localStorage.removeItem("user");
+          localStorage.removeItem("theme");
+          router.push("/login");
+        }
+      });
+  };
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-14 max-w-screen-2xl items-center justify-between">
@@ -61,6 +75,13 @@ export default function Navbar() {
           <DropdownMenuContent>
             <DropdownMenuItem className="focus:bg-transparent">
               <div className="flex gap-3 justify-between items-center">
+                {currentTheme === "system" ? (
+                  <Monitor className="w-4 stroke-primary" />
+                ) : currentTheme === "dark" ? (
+                  <MoonStar className="w-4 stroke-primary" />
+                ) : (
+                  <Sun className="w-4 stroke-primary" />
+                )}
                 Theme
                 <Select
                   onValueChange={(theme) => {
@@ -68,19 +89,26 @@ export default function Navbar() {
                   }}
                 >
                   <SelectTrigger className="w-[100px] h-7 rounded-sm">
-                    <SelectValue placeholder="System" />
+                    <SelectValue placeholder="System" defaultValue="select" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="light">Light</SelectItem>
                     <SelectItem value="dark">Dark</SelectItem>
-                    <SelectItem value="system">System</SelectItem>
+                    <SelectItem defaultChecked value="system">
+                      System
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              Log Out &nbsp; <LogOut className="w-4 stroke-red-500/70" />
+            <DropdownMenuItem
+              onClick={() => {
+                setTheme("light");
+                logout();
+              }}
+            >
+              <LogOut className="w-4 stroke-red-500/70" /> &nbsp; Log Out
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

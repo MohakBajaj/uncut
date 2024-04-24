@@ -47,6 +47,7 @@ export function FormStep3() {
   });
 
   async function onSubmit(data: z.infer<typeof FormSchemaStep3>) {
+    localStorage.setItem("user", data.username);
     await fetch("/api/auth/register", {
       method: "POST",
       body: JSON.stringify({

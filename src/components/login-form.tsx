@@ -60,7 +60,10 @@ export default function LoginForm() {
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
-          localStorage.setItem("session", JSON.stringify(data));
+          localStorage.setItem(
+            "user",
+            JSON.stringify(data.res.tokenData.payload.username)
+          );
           router.push("/app");
         }
       });
@@ -77,6 +80,8 @@ export default function LoginForm() {
       },
       body: JSON.stringify(data),
     }).then((res) => res.json());
+
+    localStorage.setItem("user", JSON.stringify(response.user.username));
 
     if (!response.success) {
       toast({
