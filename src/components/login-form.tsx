@@ -60,6 +60,7 @@ export default function LoginForm() {
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
+          localStorage.setItem("session", JSON.stringify(data));
           router.push("/app");
         }
       });

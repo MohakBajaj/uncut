@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
     },
   }).then((res) => res.json());
   if (res.success) {
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, res });
   }
   return NextResponse.json({ success: false });
 }
