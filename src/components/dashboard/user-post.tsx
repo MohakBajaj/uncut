@@ -10,7 +10,7 @@ export default function UserPost() {
           <AvatarImage src="https://source.boringavatars.com/beam/120/JohnDoe" />
           <AvatarFallback>JohnDoe</AvatarFallback>
         </Avatar>
-        <p className="font-semibold">john_doe</p>
+        <p className="font-semibold text-sm">john_doe</p>
       </div>
       <p className="w-full text-muted-foreground">
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
