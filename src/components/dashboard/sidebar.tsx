@@ -27,7 +27,7 @@ export default function AppSidebar() {
   ];
   return (
     <div className="border-r p-4">
-      <div className="flex flex-col gap-2 pr-1">
+      <div className="flex flex-col gap-2">
         <div className="text-xl font-bold text-primary/70 mb-4">
           Filter by Tags
         </div>
